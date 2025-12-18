@@ -1,0 +1,137 @@
+networks:
+  mavlink-net:
+    driver: bridge
+
+services:
+  # Profile: copter (default)
+  # Single copter for simple MAVLink testing
+  ardupilot-copter:
+    build:
+      context: ./ardupilot-sitl
+      args:
+        - VEHICLES=copter,plane
+    container_name: ardupilot-copter
+    tty: true
+    environment:
+      # GCS connection to host machine
+      - GCS_IP_1=host.docker.internal
+      - GCS_IP_2=host.docker.internal
+      - GCS_IP_3=host.docker.internal
+      # MAVLink System ID
+      - SYSID_THISMAV=1
+      # Vehicle configuration
+      - VEHICLE=ArduCopter
+      - FRAME=+
+      # Starting location (CMAC - Indiana)
+      - LAT=39.34447448066435
+      - LON=-86.00955669719413
+      - ALT=0
+      - DIR=0
+      # Simulation settings
+      - INSTANCE=0
+      - SPEEDUP=1
+      - MAVPROXY_ENABLED=1
+    ports:
+      # MAVLink ports exposed to host
+      - "14550:14550/udp"  # Primary GCS port
+      - "14551:14551/udp"  # Secondary GCS port
+      - "14552:14552/udp"  # Tertiary GCS port
+    networks:
+      - mavlink-net
+    profiles:
+      - copter
+
+  # Profile: plane
+  # Single plane for fixed-wing testing
+  ardupilot-plane:
+    build:
+      context: ./ardupilot-sitl
+      args:
+        - VEHICLES=copter,plane
+    container_name: ardupilot-plane
+    tty: true
+    environment:
+      - GCS_IP_1=host.docker.internal
+      - GCS_IP_2=host.docker.internal
+      - GCS_IP_3=host.docker.internal
+      - SYSID_THISMAV=1
+      - VEHICLE=ArduPlane
+      - FRAME=plane
+      - LAT=39.34447448066435
+      - LON=-86.00955669719413
+      - ALT=0
+      - DIR=180
+      - INSTANCE=0
+      - SPEEDUP=1
+      - MAVPROXY_ENABLED=1
+    ports:
+      - "14550:14550/udp"
+      - "14551:14551/udp"
+      - "14552:14552/udp"
+    networks:
+      - mavlink-net
+    profiles:
+      - plane
+
+  # Profile: dual-plane
+  # Two planes for multi-vehicle MAVLink testing
+  ardupilot-plane-1:
+    build:
+      context: ./ardupilot-sitl
+      args:
+        - VEHICLES=copter,plane
+    container_name: ardupilot-plane-1
+    tty: true
+    environment:
+      - GCS_IP_1=host.docker.internal
+      - GCS_IP_2=host.docker.internal
+      - GCS_IP_3=host.docker.internal
+      - SYSID_THISMAV=1
+      - VEHICLE=ArduPlane
+      - FRAME=plane
+      - LAT=39.34447448066435
+      - LON=-86.00955669719413
+      - ALT=0
+      - DIR=180
+      - INSTANCE=0
+      - SPEEDUP=1
+      - MAVPROXY_ENABLED=1
+    ports:
+      - "14550:14550/udp"
+      - "14551:14551/udp"
+      - "14552:14552/udp"
+    networks:
+      - mavlink-net
+    profiles:
+      - dual-plane
+
+  ardupilot-plane-2:
+    build:
+      context: ./ardupilot-sitl
+      args:
+        - VEHICLES=copter,plane
+    container_name: ardupilot-plane-2
+    tty: true
+    environment:
+      - GCS_IP_1=host.docker.internal
+      - GCS_IP_2=host.docker.internal
+      - GCS_IP_3=host.docker.internal
+      - SYSID_THISMAV=2
+      - VEHICLE=ArduPlane
+      - FRAME=plane
+      # Offset 50m north
+      - LAT=39.34492448066435
+      - LON=-86.00955669719413
+      - ALT=0
+      - DIR=180
+      - INSTANCE=1
+      - SPEEDUP=1
+      - MAVPROXY_ENABLED=1
+    ports:
+      - "14560:14550/udp"  # Note: different host port (14560)
+      - "14561:14551/udp"
+      - "14562:14552/udp"
+    networks:
+      - mavlink-net
+    profiles:
+      - dual-plane
