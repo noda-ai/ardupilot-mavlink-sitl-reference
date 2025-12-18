@@ -37,7 +37,7 @@ This repository provides a ready-to-run ArduPilot SITL simulation that:
 
 ```bash
 # Clone repository
-git clone <repository-url>
+git clone git@github.com:noda-ai/ardupilot-mavlink-sitl-reference.git
 cd ardupilot-mavlink-sitl
 
 # Start single copter simulation
