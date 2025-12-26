@@ -12,6 +12,7 @@ services:
         - VEHICLES=copter,plane
     container_name: ardupilot-copter
     tty: true
+    network_mode: host
     environment:
       # GCS connection to host machine
       - GCS_IP_1=host.docker.internal
@@ -31,13 +32,6 @@ services:
       - INSTANCE=0
       - SPEEDUP=1
       - MAVPROXY_ENABLED=1
-    ports:
-      # MAVLink ports exposed to host
-      - "14550:14550/udp"  # Primary GCS port
-      - "14551:14551/udp"  # Secondary GCS port
-      - "14552:14552/udp"  # Tertiary GCS port
-    networks:
-      - mavlink-net
     profiles:
       - copter
 
@@ -50,6 +44,7 @@ services:
         - VEHICLES=copter,plane
     container_name: ardupilot-plane
     tty: true
+    network_mode: host
     environment:
       - GCS_IP_1=host.docker.internal
       - GCS_IP_2=host.docker.internal
@@ -64,12 +59,6 @@ services:
       - INSTANCE=0
       - SPEEDUP=1
       - MAVPROXY_ENABLED=1
-    ports:
-      - "14550:14550/udp"
-      - "14551:14551/udp"
-      - "14552:14552/udp"
-    networks:
-      - mavlink-net
     profiles:
       - plane
 
@@ -82,6 +71,7 @@ services:
         - VEHICLES=copter,plane
     container_name: ardupilot-plane-1
     tty: true
+    network_mode: host
     environment:
       - GCS_IP_1=host.docker.internal
       - GCS_IP_2=host.docker.internal
@@ -96,12 +86,6 @@ services:
       - INSTANCE=0
       - SPEEDUP=1
       - MAVPROXY_ENABLED=1
-    ports:
-      - "14550:14550/udp"
-      - "14551:14551/udp"
-      - "14552:14552/udp"
-    networks:
-      - mavlink-net
     profiles:
       - dual-plane
 
@@ -112,6 +96,7 @@ services:
         - VEHICLES=copter,plane
     container_name: ardupilot-plane-2
     tty: true
+    network_mode: host
     environment:
       - GCS_IP_1=host.docker.internal
       - GCS_IP_2=host.docker.internal
@@ -127,11 +112,5 @@ services:
       - INSTANCE=1
       - SPEEDUP=1
       - MAVPROXY_ENABLED=1
-    ports:
-      - "14560:14550/udp"  # Note: different host port (14560)
-      - "14561:14551/udp"
-      - "14562:14552/udp"
-    networks:
-      - mavlink-net
     profiles:
       - dual-plane
